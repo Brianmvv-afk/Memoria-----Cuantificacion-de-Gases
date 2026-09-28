@@ -50,8 +50,6 @@ Por su tamaño, los siguientes archivos no están en el repositorio. Deben dejar
 | `satelital_utm.tif` | Ortofoto exportada desde QGIS con la capa XYZ *Google Satellite*: 1 m/px, EPSG:32719, E 506 500–513 668 m, N 7 532 356–7 538 500 m. |
 | `nube_volumetrica.avi`, `nube_difusa.avi`, `fondo_nube_roja_sin_sombra.avi` | Renders de la simulación usados en la validación. No son públicos. |
 
-Para acceder a los videos, contactar al autor.
-
 ## Uso
 
 ### Pipeline
