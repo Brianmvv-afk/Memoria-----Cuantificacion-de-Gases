@@ -1,0 +1,15 @@
+{
+  "video_nombre": "DJI_20250815165143_0003_V.MP4",
+  "frame_data": {
+    "lat_deg": -22.300393271598264,
+    "lon_deg": -68.90353475120718,
+    "absolute_altitude_m": 2963.569,
+    "drone_yaw_deg": -151.7,
+    "gimbal_pitch_deg": -59.7,
+    "width": 3840,
+    "height": 2160,
+    "focal": 2700.0
+  },
+  "ts_inicio_video": "2025-08-15T16:51:43",
+  "tz_local": "America/Santiago"
+}
