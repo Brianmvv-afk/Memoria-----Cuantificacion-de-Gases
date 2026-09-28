@@ -1,0 +1,52 @@
+{
+  "esquema": 1,
+  "_leeme": "Una carpeta por estacion. En la de la DMC va un archivo por mes (el nombre da igual: el mes se lee de adentro; se sugiere AAAA-MM.xls). En la de SINCA van los dos CSV de la serie horaria, direccion y velocidad, y si hay material particulado, los CSV de PM10 / PM2.5 (patron_pm; los usa la Fase 3, no la 2). Agregar una estacion es agregar una entrada aqui y su carpeta.",
+  "estaciones": [
+    {
+      "id": "DMC_Chorrillos",
+      "nombre": "Chorrillos (DMC)",
+      "fuente": "DMC",
+      "por_mes": true,
+      "patron": [
+        "*.xls",
+        "*.xlsx",
+        "*.htm",
+        "*.html"
+      ],
+      "latlon": [
+        -22.45,
+        -68.910277,
+        2298.0
+      ],
+      "z_anemometro_m": 10.0,
+      "url": "https://climatologia.meteochile.gob.cl/application/informacion/inventarioComponentesPorEstacion/220026/28/60",
+      "descarga": "Elige el MES en el selector y guarda el .xls en esta carpeta. Es HTML con extension .xls: no lo abras y vuelvas a guardar con Excel."
+    },
+    {
+      "id": "SINCA_PVergaraKeller",
+      "nombre": "P.Vergara Keller (SINCA)",
+      "fuente": "SINCA",
+      "por_mes": false,
+      "patron_dir": [
+        "*DIR*.csv"
+      ],
+      "patron_vel": [
+        "*VEL*.csv"
+      ],
+      "patron_pm": [
+        "*PM10*.csv",
+        "*PM2.5*.csv",
+        "*MP10*.csv",
+        "*MP2.5*.csv"
+      ],
+      "utm": [
+        506893.0,
+        7518227.0,
+        2260.0
+      ],
+      "z_anemometro_m": 10.0,
+      "url": "https://sinca.mma.gob.cl/",
+      "descarga": "Serie de tiempo horaria (NO la rosa de vientos), direccion y velocidad por separado. El rango va en el nombre; para extenderlo hay que volver a exportar."
+    }
+  ]
+}
