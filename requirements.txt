@@ -1,0 +1,16 @@
+numpy
+scipy
+opencv-python
+matplotlib
+pandas
+lxml
+pillow
+scikit-image
+rasterio
+pyproj
+trimesh
+pysolar
+tzdata
+torch
+transformers
+jupyter
