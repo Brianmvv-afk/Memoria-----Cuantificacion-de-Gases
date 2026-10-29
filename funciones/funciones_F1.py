@@ -1298,6 +1298,16 @@ def catalogo_variantes(cuales=None) -> list:
     return [porNombre[c] for c in cuales]
 
 
+def variantes_control(semillas):
+    """Repeticiones del control `identidad`, cada una con su semilla de siembra."""
+    V = []
+    for s in semillas:
+        v = variante(f"identidad_s{int(s)}", nota=f"control, semilla {int(s)}")
+        v["semilla"] = int(s)
+        V.append(v)
+    return V
+
+
 def escalar_umbrales_px(par_det, par_sam, k):
     """Reescala los umbrales que estan en PIXELES por un cambio de escala k."""
     d, s = dict(par_det), dict(par_sam)
@@ -1501,7 +1511,8 @@ def estudio_consistencia(cfg, masks_ref, detector, seg, geo, par_det, par_sam,
                     var, cfg, detector, seg, masks_ref, geo, par_det, par_sam,
                     fps, fin, pivote, gsd_ref, pivote_ref_px, forma_ref,
                     dir_frames, frames_consenso,
-                    guardar_mascaras=guardar_mascaras, semilla=semilla,
+                    guardar_mascaras=guardar_mascaras,
+                    semilla=var.get("semilla", semilla),
                     modo_semilla=modo_semilla, semillas_ref=semillas_ref,
                     ancla_ref=ancla_ref, verbose=verbose)
                 meta["estado"] = "ok"
@@ -1647,6 +1658,8 @@ DPI_INFORME = 200
 
 
 def familia(nombre):
+    if nombre.startswith("identidad_s"):
+        return "control"
     return FAMILIA.get(nombre, "otras")
 
 
@@ -1725,6 +1738,54 @@ def grafico_razon_area(filas, ruta=None):
     _leyenda_familias(ax, porVar, loc="upper left")
     fig.tight_layout()
     _guardar(fig, ruta)
+
+
+def grafico_razon_area_banda(filas, ruta=None, franja=None):
+    """Razon de area con el control como banda min-max entre semillas."""
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+    porVar = _por_variante(filas)
+    ctrl = [n for n in porVar if familia(n) == "control"]
+    otras = [n for n in porVar if familia(n) != "control"]
+
+    tabla = {}
+    for n in ctrl:
+        for r in porVar[n]:
+            if r[4]:
+                tabla.setdefault(r[1], [r[2], []])[1].append(r[5])
+    fr = sorted(f for f in tabla if len(tabla[f][1]) == len(ctrl))
+    t_c = np.array([tabla[f][0] for f in fr], float)
+    lo = np.array([min(tabla[f][1]) for f in fr], float)
+    hi = np.array([max(tabla[f][1]) for f in fr], float)
+
+    fig, ax = plt.subplots(figsize=FIGSIZE_INFORME)
+    if franja is not None:
+        ax.axvspan(franja[0], franja[1], color="0.88", lw=0, zorder=0)
+    for n in otras:
+        rs = porVar[n]
+        t = [r[2] for r in rs]
+        q = [r[5] if r[4] else np.nan for r in rs]
+        ax.plot(t, q, **_estilo(n))
+    ax.fill_between(t_c, lo, hi, color="#000000", alpha=.25, lw=0, zorder=1)
+    ax.axhline(1.0, color="0.25", lw=1.0, ls="--", zorder=1)
+    ax.set_xlabel("t desde la detonación (s)")
+    ax.set_ylabel("área variante / referencia")
+    ax.set_title("Error relativo (Razón de área)")
+    ax.grid(alpha=.3, linewidth=.6)
+    ax.spines[["top", "right"]].set_visible(False)
+
+    h = [Patch(color="#000000", alpha=.35,
+               label=f"control ({len(ctrl)} semillas)")]
+    presentes = {familia(n) for n in otras}
+    h += [Line2D([0], [0], color=_C_FAMILIA[f], lw=1.6, label=f)
+          for f in _ORDEN_FAMILIA if f in presentes]
+    if franja is not None:
+        h.append(Patch(color="0.88", label="caída de confianza SAM 2"))
+    ax.legend(handles=h, frameon=False, fontsize=8.5, loc="upper left")
+    fig.tight_layout()
+    _guardar(fig, ruta)
+    return dict(t=t_c, min=lo, max=hi, n_semillas=len(ctrl))
 
 
 def grafico_ranking(resumen, ruta=None, xmin=None):
