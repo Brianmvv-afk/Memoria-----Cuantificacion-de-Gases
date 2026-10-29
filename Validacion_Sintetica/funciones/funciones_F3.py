@@ -1144,8 +1144,9 @@ def graficar(res, fps, pivot_frame, u_px=None, v_px=None, bg=None, cam=None,
     ax.plot(t, y, color="#1E88E5", lw=1.5, zorder=3)
     if t_ini is not None:
         ax.axvspan(t.min(), t_ini, color="0.90", zorder=0)
-        ax.text(t.min() + 0.15, ax.get_ylim()[1] * .96,
-                "energia de\ntronadura", fontsize=7, va="top")
+        if (t_ini - t.min()) >= 0.10 * (t.max() - t.min()):
+            ax.text(t.min() + 0.15, ax.get_ylim()[1] * .96,
+                    "energia de\ntronadura", fontsize=7, va="top")
         m = t >= t_ini if t_fin is None else (t >= t_ini) & (t <= t_fin)
         ax.axhline(float(np.mean(y[m])), color="#1E88E5", ls="--", lw=.9)
     if t_fin is not None and t_fin < t.max():
